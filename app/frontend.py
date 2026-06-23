@@ -315,7 +315,7 @@ if opcion_menu == "📊 Dashboard de Equipos":
 
 
 # --- SECCIÓN 2: SIMULADOR 1 VS 1 ---
-elif opcion_menu == "⚔️ Simulador 1 vs 1":
+elif opcion_menu == "⚽ Simulador 1 vs 1":
     st.markdown("<h1 class='title-text'>Simulador Cara a Cara</h1>", unsafe_allow_html=True)
     st.markdown("<p class='subtitle-text'>Enfrenta a dos selecciones utilizando un modelo basado en Distribución de Poisson ajustado por Ratings ELO dinámicos.</p>", unsafe_allow_html=True)
 
@@ -539,66 +539,64 @@ elif opcion_menu == "🤖 Predictor Scikit-Learn":
     else:
         lista_equipos = ["Argentina", "France", "Brazil", "England", "Spain"]
 
-    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+    with st.container(key="glass_card_ml"):
+        col_eq1, col_eq2 = st.columns(2)
+        with col_eq1:
+            st.markdown(clean_html("<h3 style='color: #cbd5e1; font-family: Outfit; margin-bottom: 15px;'>Equipo Local</h3>"), unsafe_allow_html=True)
+            eq_local = st.selectbox("Selección Local:", lista_equipos, index=lista_equipos.index("Argentina") if "Argentina" in lista_equipos else 0, key="ml_eq_a")
+            
+        with col_eq2:
+            st.markdown(clean_html("<h3 style='color: #cbd5e1; font-family: Outfit; margin-bottom: 15px;'>Equipo Visitante</h3>"), unsafe_allow_html=True)
+            eq_visitante = st.selectbox("Selección Visitante:", lista_equipos, index=lista_equipos.index("France") if "France" in lista_equipos else 1, key="ml_eq_b")
     
-    col_eq1, col_eq2 = st.columns(2)
-    with col_eq1:
-        st.markdown(clean_html("<h3 style='color: #e2e8f0; font-family: Outfit; margin-bottom: 15px;'>Equipo Local</h3>"), unsafe_allow_html=True)
-        eq_local = st.selectbox("Selección Local:", lista_equipos, index=lista_equipos.index("Argentina") if "Argentina" in lista_equipos else 0, key="ml_eq_a")
-        
-    with col_eq2:
-        st.markdown(clean_html("<h3 style='color: #e2e8f0; font-family: Outfit; margin-bottom: 15px;'>Equipo Visitante</h3>"), unsafe_allow_html=True)
-        eq_visitante = st.selectbox("Selección Visitante:", lista_equipos, index=lista_equipos.index("France") if "France" in lista_equipos else 1, key="ml_eq_b")
-
-    st.markdown("<hr style='border-color: rgba(255,255,255,0.1); margin: 25px 0;'>", unsafe_allow_html=True)
-    es_neutral = st.checkbox("⚽ Jugar en cancha neutral (Mundial)", value=True, key="ml_neutral")
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("🤖 Ejecutar Modelo Random Forest"):
-        if eq_local == eq_visitante:
-            st.warning("Por favor, selecciona dos equipos diferentes.")
-        else:
-            with st.spinner("Consultando al modelo Scikit-Learn..."):
-                payload = {
-                    "team_local": eq_local,
-                    "team_visitor": eq_visitante,
-                    "is_neutral": es_neutral,
-                    "use_elo": True
-                }
-                
-                try:
-                    response = requests.post(f"{API_URL}/predict-ml", json=payload)
-                    if response.status_code == 200:
-                        pred_ml = response.json()
-                        st.markdown("<br>", unsafe_allow_html=True)
-                        
-                        prob_l_pct = pred_ml['prob_local'] * 100
-                        prob_e_pct = pred_ml['prob_draw'] * 100
-                        prob_v_pct = pred_ml['prob_visitor'] * 100
-                        
-                        st.markdown(clean_html(f"""
-                            <div class='glass-card'>
-                                <h3 style="text-align: center; font-family: Outfit; color: #94a3b8; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px;">Predicción Scikit-Learn</h3>
-                                
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-family: 'Outfit'; font-weight: 700;">
-                                    <span style="color: #60a5fa;">{pred_ml['team_local']} ({prob_l_pct:.1f}%)</span>
-                                    <span style="color: #cbd5e1;">Empate ({prob_e_pct:.1f}%)</span>
-                                    <span style="color: #fbbf24;">{pred_ml['team_visitor']} ({prob_v_pct:.1f}%)</span>
+        st.markdown("<hr style='border-color: rgba(255,255,255,0.1); margin: 25px 0;'>", unsafe_allow_html=True)
+        es_neutral = st.checkbox("⚽ Jugar en cancha neutral (Mundial)", value=True, key="ml_neutral")
+    
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("🤖 Ejecutar Modelo Random Forest"):
+            if eq_local == eq_visitante:
+                st.warning("Por favor, selecciona dos equipos diferentes.")
+            else:
+                with st.spinner("Consultando al modelo Scikit-Learn..."):
+                    payload = {
+                        "team_local": eq_local,
+                        "team_visitor": eq_visitante,
+                        "is_neutral": es_neutral,
+                        "use_elo": True
+                    }
+                    
+                    try:
+                        response = requests.post(f"{API_URL}/predict-ml", json=payload)
+                        if response.status_code == 200:
+                            pred_ml = response.json()
+                            st.markdown("<br>", unsafe_allow_html=True)
+                            
+                            prob_l_pct = pred_ml['prob_local'] * 100
+                            prob_e_pct = pred_ml['prob_draw'] * 100
+                            prob_v_pct = pred_ml['prob_visitor'] * 100
+                            
+                            st.markdown(clean_html(f"""
+                                <div style="background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(59, 130, 246, 0.15); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);">
+                                    <h3 style="text-align: center; font-family: Outfit; color: #94a3b8; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px;">Predicción Scikit-Learn</h3>
+                                    
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-family: 'Outfit'; font-weight: 700;">
+                                        <span style="color: #60a5fa;">{pred_ml['team_local']} ({prob_l_pct:.1f}%)</span>
+                                        <span style="color: #cbd5e1;">Empate ({prob_e_pct:.1f}%)</span>
+                                        <span style="color: #fbbf24;">{pred_ml['team_visitor']} ({prob_v_pct:.1f}%)</span>
+                                    </div>
+                                    <div style="display: flex; height: 16px; border-radius: 8px; overflow: hidden; margin-bottom: 40px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                                        <div style="width: {prob_l_pct}%; background: #3b82f6;"></div>
+                                        <div style="width: {prob_e_pct}%; background: #475569;"></div>
+                                        <div style="width: {prob_v_pct}%; background: #f59e0b;"></div>
+                                    </div>
+                                    
+                                    <div style="text-align: center; padding: 20px; border-radius: 12px; background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.1);">
+                                        <p style="color: #cbd5e1; text-transform: uppercase; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px;">Resultado Más Probable</p>
+                                        <h2 style="color: #cbd5e1; font-family: Outfit; font-weight: 900; margin: 0;">{pred_ml['predicted_result']}</h2>
+                                    </div>
                                 </div>
-                                <div style="display: flex; height: 16px; border-radius: 8px; overflow: hidden; margin-bottom: 40px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
-                                    <div style="width: {prob_l_pct}%; background: #3b82f6;"></div>
-                                    <div style="width: {prob_e_pct}%; background: #475569;"></div>
-                                    <div style="width: {prob_v_pct}%; background: #f59e0b;"></div>
-                                </div>
-                                
-                                <div style="text-align: center; padding: 20px; border-radius: 12px; background: rgba(15,23,42,0.8); border: 1px solid rgba(255,255,255,0.1);">
-                                    <p style="color: #cbd5e1; text-transform: uppercase; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px;">Resultado Más Probable</p>
-                                    <h2 style="color: #e2e8f0; font-family: Outfit; font-weight: 900; margin: 0;">{pred_ml['predicted_result']}</h2>
-                                </div>
-                            </div>
-                        """), unsafe_allow_html=True)
-                    else:
-                        st.error(f"Error de la API: {response.text}")
-                except Exception as e:
-                    st.error(f"Error al conectar con la API: {e}")
-    st.markdown("</div>", unsafe_allow_html=True)
+                            """), unsafe_allow_html=True)
+                        else:
+                            st.error(f"Error de la API: {response.text}")
+                    except Exception as e:
+                        st.error(f"Error al conectar con la API: {e}")

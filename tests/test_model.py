@@ -2,7 +2,7 @@ import unittest
 import sqlite3
 import numpy as np
 
-# Importamos las funciones a testear
+# Se importan las funciones a testear
 from src.elo import calcular_resultado_esperado, calcular_nuevo_elo, obtener_elo_equipo
 from src.poisson import poisson_probability, predecir_probabilidades_goles, obtener_probabilidades_1X2
 from src.utils import obtener_conexion

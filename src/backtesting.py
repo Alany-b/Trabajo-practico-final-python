@@ -37,7 +37,7 @@ def ejecutar_backtesting_qatar_2022():
         print("Error: No se encontraron partidos históricos en la base de datos.")
         return
 
-    # Dividimos temporalmente los datos
+    # Se divide temporalmente los datos
     # Qatar 2022 se jugó en el año 2022.
     # Usaremos todos los años anteriores y partidos previos a noviembre de 2022 para entrenamiento.
     # El primer partido de Qatar 2022 fue el 2022-11-20 (Ecuador vs Qatar).

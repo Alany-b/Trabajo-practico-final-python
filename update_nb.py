@@ -5,7 +5,7 @@ notebook_path = 'notebooks/04_entrenamiento_scikit.ipynb'
 with open(notebook_path, 'r', encoding='utf-8') as f:
     nb = json.load(f)
 
-# Cell to import joblib and export
+# Cell para importar joblib y exportar
 md_cell = {
    "cell_type": "markdown",
    "metadata": {},

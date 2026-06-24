@@ -72,7 +72,11 @@ prediccion-mundial/
 
 ## ⚙️ Guía de Inicialización
 
-Asegúrate de estar en el entorno virtual (`.venv`) activado en la raíz del proyecto.
+Asegúrate de estar en el entorno virtual (`.venv`) activado en la raíz del proyecto, en caso de no estar
+o no tenerlo, debe ser creado utilizando el comando:
+
+windows: py -m venv "nombre" y para activar "nombre"/Script/activate
+linux: python3 -m venv "nombre" y para activar source "nombre"/bin/Activate
 
 ### 1. Instalar Dependencias
 ```powershell

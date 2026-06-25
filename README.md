@@ -1,4 +1,4 @@
-                                            # ⚽ Predicción del Mundial 2026
+# ⚽ Predicción del Mundial 2026
 
 Este proyecto representa una solución académica integral basada en **Machine Learning** que abarca todo el ciclo de vida de un proyecto de datos: desde la adquisición, exploración y limpieza de datos, hasta el entrenamiento de clasificadores y el despliegue de una interfaz interactiva y una API web.
 
